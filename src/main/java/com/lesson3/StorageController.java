@@ -39,7 +39,7 @@ public class StorageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/createFile", produces = "text/plain")
     public @ResponseBody
-    String createFileInStorage(HttpServletRequest request, HttpServletResponse response, @RequestBody String storageStr, @RequestBody String fileStr) {
+    String createFileInStorage(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Storage storage1 = convertJSONStringToObjectStorage(storage);
            //
