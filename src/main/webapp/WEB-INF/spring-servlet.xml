@@ -25,4 +25,10 @@
     <bean id="Step" class="com.lesson2.rout.Step"></bean>
     <bean id="Service" class="com.lesson2.rout.Service"></bean>
 
+    <bean id="File" class="com.lesson3.File"></bean>
+    <bean id="Storage" class="com.lesson3.Storage"></bean>
+    <bean id="GeneralService" class="com.lesson3.GeneralService"></bean>
+    <bean id="FileDAO" class="com.lesson3.FileDAO"></bean>
+    <bean id="StorageDAO" class="com.lesson3.StorageDAO"></bean>
+
 </beans>
