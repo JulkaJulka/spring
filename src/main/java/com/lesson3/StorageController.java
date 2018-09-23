@@ -47,7 +47,7 @@ public class StorageController {
             generalService.save(convertJSONStringToObjectStorage(request), file);
 
 
-            return file.toString();
+            return file.toString();//
             //
 
         } catch (Exception e) {
