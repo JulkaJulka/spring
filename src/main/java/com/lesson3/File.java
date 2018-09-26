@@ -8,7 +8,7 @@ import java.util.Random;
 
 @Entity
 @Table(name = "FILE")
-public class File {
+public class File<T> {
     private long id;
     private String name;
     private String format;
@@ -20,6 +20,56 @@ public class File {
     public File() {
     }
 
+    /*@Id
+    @SequenceGenerator(name = "FILE_SEQ", sequenceName = "FILE_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "FILE_SEQ", strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
+    public long getId() {
+        return id;
+    }
+
+    @Column(name = "NAME")
+    public String getName() {
+        return name;
+    }
+
+    @Column(name = "FORMAT")
+    public String getFormat() {
+        return format;
+    }
+
+    @Column(name = "SIZE")
+    public long getSize() {
+        return size;
+    }
+
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "STORAGE_ID")
+    public Storage getStorage() {
+        return storage;
+    }
+
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
+*/
     @Id
     @SequenceGenerator(name = "FILE_SEQ", sequenceName = "FILE_SEQ", allocationSize = 1)
     @GeneratedValue(generator = "FILE_SEQ", strategy = GenerationType.SEQUENCE)
@@ -43,12 +93,11 @@ public class File {
         return size;
     }
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "STORAGE_ID")
     public Storage getStorage() {
         return storage;
     }
-
 
     public void setId(long id) {
         this.id = id;

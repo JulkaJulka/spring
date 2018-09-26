@@ -10,7 +10,7 @@ import org.hibernate.query.Query;
 public class GeneralDAO<T> {
     private static SessionFactory sessionFactory;
 
-    public T save(T t) throws Exception {
+    public T save(T t) throws HibernateException {
 
         Transaction tr = null;
         try (Session session = createSessionFactory().openSession()) {

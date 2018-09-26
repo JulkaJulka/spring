@@ -39,21 +39,21 @@ public class StorageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/createFile", produces = "text/plain")
     public @ResponseBody
-    String createFileInStorage(HttpServletRequest request, HttpServletResponse response) {
+    String createFileInStorage(HttpServletRequest req, HttpServletResponse resp) throws IOException , HibernateException{
+        String sId = req.getParameter("idStorage");
+        Long idStorage = Long.parseLong(sId);
         try {
+
             // Storage storage1 = convertJSONStringToObjectStorage(storage);
            //
-            File file = convertJSONStringToFile(request);
-            generalService.save(convertJSONStringToObjectStorage(request), file);
-
-
-            return file.toString();//
-            //
-
-        } catch (Exception e) {
+            File file = convertJSONStringToFile(req);
+            Storage storage = generalService.findStorageById(idStorage);
+            generalService.save(storage,file );
+            return file.toString();
+        } catch (BadRequestException | IOException e) {
             e.printStackTrace();
+           // resp.getWriter().println("Saving unsuccessful " + e.getMessage());
             return "Saving unsuccessful " + e.getMessage();
-            //
         }
 
     }

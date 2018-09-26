@@ -7,23 +7,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 
-import static com.lesson3.Storage.SIZEMAX_STORAGE;
 
-public class GeneralService {
+
+public class GeneralService <T>{
 
     @Autowired
     private FileDAO fileDAO;
     @Autowired
     private StorageDAO storageDAO;
+    private GeneralDAO generalDAO;
 
 
     public GeneralService() {
     }
 
-    public File save(Storage storage, File file) throws Exception {
+    public File findFileById(File file){
+        return fileDAO.findById(file.getId());
+
+    }
+
+    public Storage findStorageById(long id){
+        return storageDAO.findById(id);
+
+    }
+    public File save(Storage storage, File file) throws BadRequestException {
 
         if (file == null)
-            throw new Exception("Putted file  is not detected");
+            throw new BadRequestException("Putted file  is not detected");
 
         Transaction tr = null;
         try (Session session = GeneralDAO.createSessionFactory().openSession()){
@@ -63,11 +73,11 @@ public class GeneralService {
             return foundFile;
 
 
-        } catch (SQLException | HibernateException e) {
+        } catch ( HibernateException e) {
             System.err.println(e.getMessage());
             if (tr != null)
                 tr.rollback();
-            throw new Exception("Save is failed");
+            throw new HibernateException("Save is failed");
         }
     }
 
@@ -104,7 +114,7 @@ public class GeneralService {
             throw new BadRequestException("Wrong data of storage");
         if (file.getStorage().getId() == storage.getId())
             throw new BadRequestException("File id " + file.getId() + " already exist in Storage id " + file.getStorage().getId());
-        if (storage.getStorageSize() + file.getSize() > SIZEMAX_STORAGE)
+        if (storage.getStorageSize() + file.getSize() > 3000)
             throw new BadRequestException("Not enough space in storage id " + storage.getId());
         if (!checkFormatsSupported(storage, file))
             throw new BadRequestException("Format " + file.getFormat() + " is not supported by storage " + storage.getId());

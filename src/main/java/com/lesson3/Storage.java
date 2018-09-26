@@ -8,7 +8,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "STORAGE")
 public class Storage<T> {
-    public static long SIZEMAX_STORAGE = 3000;
+    //public  long SIZEMAX_STORAGE ;
     private long id;
     private String[] formatsSupported;
     private String storageCountry;
@@ -19,6 +19,13 @@ public class Storage<T> {
     public Storage() {
     }
 
+    /*public long getSIZEMAX_STORAGE() {
+        return SIZEMAX_STORAGE = 3000;
+    }
+
+    public void setSIZEMAX_STORAGE(long SIZEMAX_STORAGE) {
+        this.SIZEMAX_STORAGE = SIZEMAX_STORAGE;
+    }*/
 
     @Id
     @SequenceGenerator(name = "ST_SEQ", sequenceName = "STORAGE_SEQ", allocationSize = 1)
@@ -51,14 +58,17 @@ public class Storage<T> {
         return storageCountry;
     }
 
+    @Column(name = "STORAGE_SIZE")
+    public long getStorageSize() {
+        return storageSize;
+    }
+
     @OneToMany(targetEntity = File.class, mappedBy = "storage", fetch = FetchType.LAZY)
     public List<File> getFiles() {
         return files;
     }
 
-    public long getStorageSize() {
-        return storageSize;
-    }
+
 
     public void setId(long id) {
         this.id = id;
@@ -68,6 +78,8 @@ public class Storage<T> {
         this.formatsSupported = formatsSupported;
     }
 
+
+
     public void setStorageCountry(String storageCountry) {
         this.storageCountry = storageCountry;
     }
@@ -75,6 +87,12 @@ public class Storage<T> {
     public void setStorageSize(long storageSize) {
         this.storageSize = storageSize;
     }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
