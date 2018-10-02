@@ -4,12 +4,17 @@ public class StorageDAO extends GeneralDAO<Storage> {
     public static final String FIND_ST_BY_ID_STORAGE = "FROM Storage WHERE ID = :ID ";
     public static final String DELETE_ST_BY_ID_STORAGE = "DELETE FROM Storage WHERE ID = :ID";
 
-    public Storage findById(long id){
-        return findById(FIND_ST_BY_ID_STORAGE, id);
+    public StorageDAO() {
     }
 
-    public void delete(long id) {
-        delete(DELETE_ST_BY_ID_STORAGE, id);
+    @Override
+    public String setHql() {
+        return FIND_ST_BY_ID_STORAGE;
+    }
+
+    @Override
+    public String setHqlDelEntity() {
+        return DELETE_ST_BY_ID_STORAGE;
     }
 
 }

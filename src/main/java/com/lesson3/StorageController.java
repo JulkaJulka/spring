@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,67 +12,118 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.List;
 
 @Controller
 public class StorageController {
+
     @Autowired
-    private GeneralService generalService;
-
-   /* @RequestMapping(method = RequestMethod.GET, value = "/showFile", produces = "text/plain")
-    public @ResponseBody String showFile(@RequestBody String fileStr){
-        try {
-            // Storage storage1 = convertJSONStringToObjectStorage(storage);
-            File file = convertJSONStringToObjectFile(fileStr);
-
-            generalService.save(convertJSONStringToObjectStorage(storageStr),file);
-
-            return file.toString();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Saving unsuccessful " + e.getMessage();
-        }
-
-    }*/
+    private FileService fileService;
+    @Autowired
+    private StorageService storageService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/createFile", produces = "text/plain")
     public @ResponseBody
-    String createFileInStorage(HttpServletRequest req, HttpServletResponse resp) throws IOException , HibernateException{
+    String createFileInStorage(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String fId = req.getParameter("idFile");
+        Long idFile = Long.parseLong(fId);
+
         String sId = req.getParameter("idStorage");
         Long idStorage = Long.parseLong(sId);
-        try {
 
-            // Storage storage1 = convertJSONStringToObjectStorage(storage);
-           //
-            File file = convertJSONStringToFile(req);
-            Storage storage = generalService.findStorageById(idStorage);
-            generalService.save(storage,file );
-            return file.toString();
-        } catch (BadRequestException | IOException e) {
+        try {
+            Storage storage = storageService.findObjectById(idStorage);
+            File file = fileService.findObjectById(idFile);
+
+            return fileService.save(storage, file).toString();
+
+        } catch (BadRequestException | HibernateException e) {
+
             e.printStackTrace();
-           // resp.getWriter().println("Saving unsuccessful " + e.getMessage());
+            resp.getWriter().println("Saving unsuccessful " + e.getMessage());
             return "Saving unsuccessful " + e.getMessage();
         }
 
     }
 
-    private File convertJSONStringToFile(HttpServletRequest req) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        try (InputStream is = req.getInputStream()) {
-            File file = mapper.readValue(is, File.class);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deleteFile", produces = "text/plain")
+    protected @ResponseBody
+    String deleteFile(HttpServletRequest req, HttpServletRequest res) throws IOException {
 
-            return file;
-        } catch (IOException e) {
+        String fId = req.getParameter("idFile");
+        Long idFile = Long.parseLong(fId);
+
+        try {
+
+            Storage storage = convertJSONStringToStorage(req);
+            File file = fileService.findObjectById(idFile);
+            fileService.delete(storage, file);
+            return "File id " + file.getId() + " was deleted successfully";
+
+        } catch (BadRequestException | HibernateException e) {
             e.printStackTrace();
+            return "Deleting unsuccessful " + e.getMessage();
         }
-        return null;
     }
 
-    private Storage convertJSONStringToObjectStorage(HttpServletRequest req) throws IOException {
+    @RequestMapping(method = RequestMethod.POST, value = "/transferFile", produces = "text/plain")
+    public @ResponseBody
+    String transferFile(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String fId = req.getParameter("idFile");
+        Long idFile = Long.parseLong(fId);
+
+        String strsFromId = req.getParameter("idStorageFrom");
+        Long idStorageFrom = Long.parseLong(strsFromId);
+
+        String strsToId = req.getParameter("idStorageTo");
+        Long idStorageTo = Long.parseLong(strsToId);
+
+        try {
+            Storage storageFrom = storageService.findObjectById(idStorageFrom);
+            Storage storageTo = storageService.findObjectById(idStorageTo);
+            File transferFiles = fileService.transferFile(storageFrom, storageTo, idFile);
+
+            return transferFiles.toString();
+
+        } catch (BadRequestException | HibernateException e) {
+
+            e.printStackTrace();
+            resp.getWriter().println("Saving unsuccessful " + e.getMessage());
+            return "Saving unsuccessful " + e.getMessage();
+        }
+
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/transferAll", produces = "text/plain")
+    public @ResponseBody
+    String transferAll(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        String strsFromId = req.getParameter("idStorageFrom");
+        Long idStorageFrom = Long.parseLong(strsFromId);
+
+        String strsToId = req.getParameter("idStorageTo");
+        Long idStorageTo = Long.parseLong(strsToId);
+
+        try {
+            Storage storageFrom = storageService.findObjectById(idStorageFrom);
+            Storage storageTo = storageService.findObjectById(idStorageTo);
+            List<File> trList = fileService.transferAll(storageFrom, storageTo);
+
+            return trList.toString();
+
+        } catch (BadRequestException | HibernateException e) {
+
+            e.printStackTrace();
+            resp.getWriter().println("Saving unsuccessful " + e.getMessage());
+            return "TransferAll unsuccessful " + e.getMessage();
+        }
+
+    }
+
+    private Storage convertJSONStringToStorage(HttpServletRequest req) {
         ObjectMapper mapper = new ObjectMapper();
         try (InputStream is = req.getInputStream()) {
-            Storage storage= mapper.readValue(is, Storage.class);
+            Storage storage = mapper.readValue(is, Storage.class);
 
             return storage;
         } catch (IOException e) {

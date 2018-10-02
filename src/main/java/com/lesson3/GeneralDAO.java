@@ -7,8 +7,17 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-public class GeneralDAO<T> {
+public abstract class GeneralDAO<T> {
     private static SessionFactory sessionFactory;
+    private static  String hql = "";
+
+
+    public GeneralDAO() {
+    }
+
+   public abstract String setHql();
+    public abstract String setHqlDelEntity();
+
 
     public T save(T t) throws HibernateException {
 
@@ -52,14 +61,14 @@ public class GeneralDAO<T> {
         }
     }
 
-    public void delete(String hqlDelEntity, long id) {
+    public void delete(long id) {
         Transaction tr = null;
         try (Session session = createSessionFactory().openSession()) {
 
             tr = session.getTransaction();
             tr.begin();
 
-            Query queryDelHt = session.createQuery(hqlDelEntity);
+            Query queryDelHt = session.createQuery(setHqlDelEntity());
             queryDelHt.setParameter("ID", id);
             queryDelHt.executeUpdate();
 
@@ -73,23 +82,26 @@ public class GeneralDAO<T> {
         }
     }
 
-    public T findById(String sql, long id) {
+    public T findById(long id) {
         try (Session session = createSessionFactory().openSession()) {
 
-            Query query = session.createQuery(sql);
+            Query query = session.createQuery(setHql());
             query.setParameter("ID", id);
+
+            query.getResultList();
 
             if (query.uniqueResult() == null)
                 return null;
-            T entity = (T) query.getSingleResult();
 
-            return entity;
+
+            return (T) query.getSingleResult();
 
         } catch (HibernateException e) {
             System.err.println(e.getMessage());
             throw new HibernateException("Something went wrong");
         }
     }
+
 
     public static SessionFactory createSessionFactory() {
 

@@ -27,8 +27,11 @@
 
     <bean id="File" class="com.lesson3.File"></bean>
     <bean id="Storage" class="com.lesson3.Storage"></bean>
-    <bean id="GeneralService" class="com.lesson3.GeneralService"></bean>
-    <bean id="FileDAO" class="com.lesson3.FileDAO"></bean>
-    <bean id="StorageDAO" class="com.lesson3.StorageDAO"></bean>
+    <bean id="FileService" class="com.lesson3.FileService"></bean>
+    <bean id="StorageService" class="com.lesson3.StorageService"></bean>
+    <bean id="GeneralDAO" class="com.lesson3.GeneralDAO" abstract="true"></bean>
+   <bean id="FileDAO" class="com.lesson3.FileDAO" parent="GeneralDAO"></bean>
+    <bean id="StorageDAO" class="com.lesson3.StorageDAO" parent="GeneralDAO"></bean>
+
 
 </beans>

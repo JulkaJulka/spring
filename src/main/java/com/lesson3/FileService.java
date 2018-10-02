@@ -1,4 +1,17 @@
 package com.lesson3;
 
-public class FileService {
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class FileService extends GeneralService<File> {
+    @Autowired
+    private FileDAO fileDAO;
+
+    public FileService() {
+    }
+
+    @Override
+    public File findObjectById(long id) {
+        return fileDAO.findById(id);
+    }
+
 }
