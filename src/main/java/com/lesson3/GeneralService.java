@@ -16,7 +16,6 @@ public class GeneralService<T> {
     private StorageDAO storageDAO;
     @Autowired
     private FileDAO fileDAO;
-    //  @Autowired
     private GeneralDAO generalDAO;
     private static long SIZEMAX_STORAGE = 3000l;
 
@@ -30,58 +29,29 @@ public class GeneralService<T> {
 
         return t;
     }
-
-
     public File save(Storage storage, File file) throws BadRequestException {
-
-        validateInputData(storage, file);
-
-        Transaction tr = null;
-        try (Session session = GeneralDAO.createSessionFactory().openSession()) {
-            tr = session.getTransaction();
-            tr.begin();
-
-            Storage foundStorage = storageDAO.findById(storage.getId());
-
-            if (foundStorage == null)
-                throw new BadRequestException("Storage with id " + storage.getId() + " doesn't exist in DB");
-
-            File foundFile = fileDAO.findById(file.getId());
-
-            if (foundFile == null) {
-                checkLimitation(foundStorage, file);
-                if (file.getStorage() == null) {
-                    file.getStorage().setId(storage.getId());
-                    fileDAO.save(file);
-                    foundStorage.setStorageSize(foundStorage.getStorageSize() + file.getSize());
-                    storageDAO.update(foundStorage);
-                    tr.commit();
-                    return file;
-                }
-            }
-            if (foundFile.getStorage() != null) {
-                throw new BadRequestException("File id " + file.getId() + " already is busy by Storage " + foundFile.getStorage().getId());
-            }
-            checkLimitation(foundStorage, foundFile);
-
-            foundFile.setStorage(foundStorage);
-            fileDAO.update(foundFile);
-
-            foundStorage.setStorageSize(foundStorage.getStorageSize() + foundFile.getSize());
-            storageDAO.update(foundStorage);
-
-            tr.commit();
-
-            return foundFile;
-
-
-        } catch (HibernateException e) {
-            System.err.println(e.getMessage());
-            if (tr != null)
-                tr.rollback();
-            throw new HibernateException("Save is failed");
-        }
+        checkLimitation(storage, file);
+        return fileDAO.save(storage,file);
     }
+
+    public boolean checkLimitation(Storage storage, File file) throws BadRequestException {
+        if (file == null)
+            throw new BadRequestException("Putted file  is not detected");
+        if (storage == null)
+            throw new BadRequestException("Wrong data of storage. Storage doesn't exist in DB");
+        if (file.getStorage() != null && file.getStorage().getId() == storage.getId())
+            throw new BadRequestException("File id " + file.getId() + " already exist in Storage id " + file.getStorage().getId());
+        if (storage.getStorageSize() + file.getSize() > SIZEMAX_STORAGE)
+            throw new BadRequestException("Not enough space in storage id " + storage.getId());
+        if (!checkFormatsSupported(storage, file))
+            throw new BadRequestException("Format " + file.getFormat() + " is not supported by storage " + storage.getId());
+        if (!checkIdStorage(storage))
+            throw new BadRequestException("Storage Id " + storage.getId() + " is wrong.");
+        return true;
+    }
+
+
+
 
     public void delete(Storage storage, File file) throws BadRequestException {
         validateInputData(storage, file);
@@ -225,20 +195,6 @@ public class GeneralService<T> {
         }
     }
 
-    public boolean checkLimitation(Storage storage, File file) throws BadRequestException {
-        if (file == null)
-            throw new BadRequestException("Putted file  is not detected");
-        if (storage == null)
-            throw new BadRequestException("Wrong data of storage");
-        if (file.getStorage() != null && file.getStorage().getId() == storage.getId())
-            throw new BadRequestException("File id " + file.getId() + " already exist in Storage id " + file.getStorage().getId());
-        if (storage.getStorageSize() + file.getSize() > SIZEMAX_STORAGE)
-            throw new BadRequestException("Not enough space in storage id " + storage.getId());
-        if (!checkFormatsSupported(storage, file))
-            throw new BadRequestException("Format " + file.getFormat() + " is not supported by storage " + storage.getId());
-        if (!checkIdStorage(storage))
-            throw new BadRequestException("Storage Id " + storage.getId() + " is wrong.");
-        return true;
-    }
+
 
 }

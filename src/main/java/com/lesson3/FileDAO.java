@@ -2,11 +2,16 @@ package com.lesson3;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileDAO extends GeneralDAO<File> {
     public static final String FIND_FL_BY_ID_FILE = "FROM File WHERE ID = :ID ";
     public static final String DELETE_FL_BY_ID_FILE = "DELETE FROM File WHERE ID = :ID";
+
+    @Autowired
+    private StorageDAO storageDAO;
 
     public FileDAO() {
     }
@@ -39,4 +44,34 @@ public class FileDAO extends GeneralDAO<File> {
 
         }
     }
+    public File save(Storage storage, File file) throws BadRequestException {
+
+        Transaction tr = null;
+        try (Session session = GeneralDAO.createSessionFactory().openSession()) {
+            tr = session.getTransaction();
+            tr.begin();
+
+            if (  file.getStorage() != null) {
+                throw new BadRequestException("File id " + file.getId() + " already is busy by Storage " + file.getStorage().getId());
+            }
+
+            file.setStorage(storage);
+            update(file);
+
+           storage.setStorageSize(storage.getStorageSize() + file.getSize());
+            storageDAO.update(storage);
+
+            tr.commit();
+
+            return file;
+
+
+        } catch (HibernateException e) {
+            System.err.println(e.getMessage());
+            if (tr != null)
+                tr.rollback();
+            throw new HibernateException("Save is failed");
+        }
+    }
+
 }
