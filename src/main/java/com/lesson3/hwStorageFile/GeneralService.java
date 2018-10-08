@@ -29,9 +29,9 @@ public class GeneralService<T> {
 
         return t;
     }
-    public File save(Storage storage, File file) throws BadRequestException {
+    public File put(Storage storage, File file) throws BadRequestException {
         checkLimitation(storage, file);
-        return fileDAO.save(storage,file);
+        return fileDAO.put(storage,file);
     }
 
     public boolean checkLimitation(Storage storage, File file) throws BadRequestException {

@@ -22,9 +22,9 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/createFile", produces = "text/plain")
+    @RequestMapping(method = RequestMethod.POST, value = "/putFile", produces = "text/plain")
     public @ResponseBody
-    String createFileInStorage(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    String put(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String fId = req.getParameter("idFile");
         Long idFile = Long.parseLong(fId);
 
@@ -35,7 +35,7 @@ public class StorageController {
             Storage storage = storageService.findObjectById(idStorage);
             File file = fileService.findObjectById(idFile);
 
-            return fileService.save(storage, file).toString();
+            return fileService.put(storage, file).toString();
 
         } catch (BadRequestException | HibernateException e) {
 

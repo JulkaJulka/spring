@@ -44,7 +44,7 @@ public class FileDAO extends GeneralDAO<File> {
 
         }
     }
-    public File save(Storage storage, File file) throws BadRequestException {
+    public File put(Storage storage, File file) throws BadRequestException {
 
         Transaction tr = null;
         try (Session session = GeneralDAO.createSessionFactory().openSession()) {
