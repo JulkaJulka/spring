@@ -1,4 +1,4 @@
-package com.lesson3;
+package com.lesson3.hwStorageFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.HibernateException;

@@ -25,13 +25,13 @@
     <bean id="Step" class="com.lesson2.rout.Step"></bean>
     <bean id="Service" class="com.lesson2.rout.Service"></bean>
 
-    <bean id="File" class="com.lesson3.File"></bean>
-    <bean id="Storage" class="com.lesson3.Storage"></bean>
-    <bean id="FileService" class="com.lesson3.FileService"></bean>
-    <bean id="StorageService" class="com.lesson3.StorageService"></bean>
-    <bean id="GeneralDAO" class="com.lesson3.GeneralDAO" abstract="true"></bean>
-   <bean id="FileDAO" class="com.lesson3.FileDAO" parent="GeneralDAO"></bean>
-    <bean id="StorageDAO" class="com.lesson3.StorageDAO" parent="GeneralDAO"></bean>
+    <bean id="File" class="com.lesson3.hwStorageFile.File"></bean>
+    <bean id="Storage" class="com.lesson3.hwStorageFile.Storage"></bean>
+    <bean id="FileService" class="com.lesson3.hwStorageFile.FileService"></bean>
+    <bean id="StorageService" class="com.lesson3.hwStorageFile.StorageService"></bean>
+    <bean id="GeneralDAO" class="com.lesson3.hwStorageFile.GeneralDAO" abstract="true"></bean>
+   <bean id="FileDAO" class="com.lesson3.hwStorageFile.FileDAO" parent="GeneralDAO"></bean>
+    <bean id="StorageDAO" class="com.lesson3.hwStorageFile.StorageDAO" parent="GeneralDAO"></bean>
 
 
 </beans>

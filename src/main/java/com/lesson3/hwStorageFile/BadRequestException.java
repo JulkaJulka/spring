@@ -1,4 +1,4 @@
-package com.lesson3;
+package com.lesson3.hwStorageFile;
 
 public class BadRequestException extends Exception {
     public BadRequestException(String message) {

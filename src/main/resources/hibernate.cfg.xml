@@ -12,8 +12,8 @@
 
 
        <mapping class="com.lesson2.item.Item"></mapping>
-        <mapping class="com.lesson3.File"></mapping>
-        <mapping class="com.lesson3.Storage"></mapping>
+        <mapping class="com.lesson3.hwStorageFile.File"></mapping>
+        <mapping class="com.lesson3.hwStorageFile.Storage"></mapping>
 
     </session-factory>
 

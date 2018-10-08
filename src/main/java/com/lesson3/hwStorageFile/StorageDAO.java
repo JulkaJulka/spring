@@ -1,4 +1,4 @@
-package com.lesson3;
+package com.lesson3.hwStorageFile;
 
 public class StorageDAO extends GeneralDAO<Storage> {
     public static final String FIND_ST_BY_ID_STORAGE = "FROM Storage WHERE ID = :ID ";

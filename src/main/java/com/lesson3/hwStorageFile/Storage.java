@@ -1,9 +1,8 @@
-package com.lesson3;
+package com.lesson3.hwStorageFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 

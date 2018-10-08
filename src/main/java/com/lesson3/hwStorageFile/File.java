@@ -1,12 +1,9 @@
-package com.lesson3;
+package com.lesson3.hwStorageFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.Random;
 
 @Entity
 @Table(name = "\"FILE\"")

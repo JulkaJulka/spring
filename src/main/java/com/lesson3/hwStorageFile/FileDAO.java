@@ -1,4 +1,4 @@
-package com.lesson3;
+package com.lesson3.hwStorageFile;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
