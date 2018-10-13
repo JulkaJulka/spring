@@ -81,6 +81,7 @@ public class StorageController {
         try {
             Storage storageFrom = storageService.findObjectById(idStorageFrom);
             Storage storageTo = storageService.findObjectById(idStorageTo);
+
             File transferFiles = fileService.transferFile(storageFrom, storageTo, idFile);
 
             return transferFiles.toString();
@@ -88,8 +89,8 @@ public class StorageController {
         } catch (BadRequestException | HibernateException e) {
 
             e.printStackTrace();
-            resp.getWriter().println("Saving unsuccessful " + e.getMessage());
-            return "Saving unsuccessful " + e.getMessage();
+            resp.getWriter().println("Transfer file doesn't successfully " + e.getMessage());
+            return "Transfer file doesn't successfully " + e.getMessage();
         }
 
     }
@@ -114,7 +115,7 @@ public class StorageController {
         } catch (BadRequestException | HibernateException e) {
 
             e.printStackTrace();
-            resp.getWriter().println("Saving unsuccessful " + e.getMessage());
+            resp.getWriter().println("TransferAll unsuccessfully " + e.getMessage());
             return "TransferAll unsuccessful " + e.getMessage();
         }
 

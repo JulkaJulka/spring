@@ -19,9 +19,9 @@ public class OrderController {
         return "ok";
     }
 
-     /*public Order save(Order order) {
+     /*public Order put(Order order) {
         orderService.test(0, 1111);
-        return orderService.save(order);
+        return orderService.put(order);
     }*/
 
    /* private OrderService getOrderService() {
